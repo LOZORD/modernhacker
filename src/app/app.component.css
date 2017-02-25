@@ -1,0 +1,14 @@
+.app-body {
+    background-color: black;
+    font-family: Courier New, Courier, monospace;
+    height: 100%;
+    width: 100%;
+}
+
+.color-default {
+    color: limegreen;
+}
+
+input.hidden {
+    display: none;
+}
