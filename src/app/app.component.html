@@ -1,4 +1,4 @@
-<pre class='app-body color-default'>
-  {{viewCode}}
-</pre>
-<input id='main-input' class='hidden' (keyup)='onKeyPress($event)'>
+<div class='app-body color-default'>
+  <snippet *ngFor='let snippet of snippets' [code]='snippet.code'></snippet>
+  <div #footer id='footer'></div>
+</div>

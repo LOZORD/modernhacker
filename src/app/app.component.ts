@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, ContentChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, QueryList, AfterViewInit } from '@angular/core';
 import { AppService } from './app.service';
+import { SnippetComponent } from './snippet.component';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,12 @@ import { AppService } from './app.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  modelCode = '\n';
+  modelCode = '';
   typeIndex = 0;
   viewCode = '';
+  ready = false;
+  private footer: HTMLElement;
+  snippets: { code: string, color: string }[] = [];
   constructor(private service: AppService) { }
 
   ngOnInit() {
@@ -18,13 +22,26 @@ export class AppComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.ready = true;
+    this.footer = document.getElementById('footer');
+  }
+
   @HostListener('document:keyup', ['$event'])
-  onKeyPress(event: any) {
-    if (this.typeIndex < this.modelCode.length) {
-      const ff = AppComponent.getRandomGrouping();
-      const s = this.modelCode.slice(this.typeIndex, this.typeIndex + ff);
-      this.typeIndex += ff;
-      this.viewCode += s;
+  onKeyPress(event: KeyboardEvent): void {
+    if (this.ready) {
+      if (this.typeIndex < this.modelCode.length) {
+        const ff = AppComponent.getRandomGrouping();
+        let s = this.modelCode.slice(this.typeIndex, this.typeIndex + ff);
+        s = s.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        s = s.replace(' ', '&nbsp;');
+        this.typeIndex += ff;
+        this.snippets.push({
+          code: s,
+          color: 'green'
+        });
+        this.footer.scrollIntoView(false);
+      }
     }
   }
 
